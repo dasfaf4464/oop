@@ -68,7 +68,27 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
     }
 
     private void quitItemClicked() {
-        System.out.println("quitItemClicked");
+        try{
+            JDialog dialog = new JDialog();
+            dialog.setModal(true);
+            dialog.setLocationRelativeTo(frame);
+            Container c = dialog.getContentPane();
+            c.setLayout(new FlowLayout(FlowLayout.CENTER));
+            c.add(new JLabel("열려있는 모든 파일을 저장하고 종료합니다."));
+            dialog.pack();
+            dialog.setVisible(true);
+            Thread.sleep(2000);
+            for(int i = 0; i < frame.editor.getComponentCount(); i++) {
+                JScrollPane selectedScroll = (JScrollPane) frame.editor.getComponentAt(i);
+                JViewport viewport = selectedScroll.getViewport();
+                JTextArea selectedComponent = (JTextArea) viewport.getView();
+                TabbedFile.saveFile(i, selectedComponent.getText());
+            }
+            frame.setVisible(false);
+            System.exit(0);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void compileItemClicked() {
@@ -102,6 +122,7 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
         pressedKeys.add(e.getKeyCode());
 
         if(tabFocused && pressedKeys.contains(KeyEvent.VK_CONTROL) && pressedKeys.contains(KeyEvent.VK_S)) {
+            System.out.println("com");
             compileItemClicked();
         }
     }

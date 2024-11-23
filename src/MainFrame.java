@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
         results = new JTextArea();
 
         container.add(editor);
-        container.add(results);
+        container.add(new JScrollPane(results));
 
         setVisible(true);
     }
