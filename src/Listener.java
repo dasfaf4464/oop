@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Listener extends KeyAdapter implements ActionListener, FocusListener {
+public class Listener extends KeyAdapter implements ActionListener, FocusListener, MouseListener {
     private MainFrame frame;
     private Set<Integer> pressedKeys;
     private Compiler compiler;
@@ -43,12 +43,45 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
 
     private void saveItemClicked() {
         int index = frame.editor.getSelectedIndex();
+
         if(index != -1) {
-            JScrollPane selectedScroll = (JScrollPane) frame.editor.getComponentAt(index);
-            JViewport viewport = selectedScroll.getViewport();
-            JTextArea selectedComponent = (JTextArea) viewport.getView();
-            TabbedFile.saveFile(index, selectedComponent.getText());
+            JDialog dialog = new JDialog();
+            Container c = dialog.getContentPane();
+            c.setLayout(new GridLayout(3,1));
+            c.add(new JLabel("저장?"), BorderLayout.CENTER);
+            JButton s = new JButton("yes");
+            JButton n = new JButton("no");
+            c.add(s, BorderLayout.SOUTH);
+            c.add(n, BorderLayout.NORTH);
+            dialog.pack();
+            dialog.setLocationRelativeTo(frame);
+            dialog.setVisible(true);
+            s.setActionCommand("yes");
+            s.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JScrollPane selectedScroll = (JScrollPane) frame.editor.getComponentAt(index);
+                            JViewport viewport = selectedScroll.getViewport();
+                            JTextArea selectedComponent = (JTextArea) viewport.getView();
+                            TabbedFile.saveFile(index, selectedComponent.getText());
+                            dialog.setVisible(false);
+                            dialog.dispose();
+                        }
+                    }
+            );
+            n.setActionCommand("no");
+            n.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            dialog.setVisible(false);
+                            dialog.dispose();
+                        }
+                    }
+            );
+
         }
+
+
     }
 
     private void saveAsItemClicked() {
@@ -66,6 +99,7 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
             }
         }
     }
+
 
     private void quitItemClicked() {
         try{
@@ -131,17 +165,42 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
     }
 
     @Override public void focusGained(FocusEvent e) {
-        JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-        if(tabbedPane.equals(frame.editor)) {
+        if(e.getSource() instanceof JTextArea || e.getSource() instanceof JScrollPane) {
             System.out.println("focused");
             tabFocused = true;
         }
     }
 
     @Override public void focusLost(FocusEvent e) {
-        JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-        if(tabbedPane.equals(frame.editor)) {
+        if(e.getSource() instanceof JTextArea || e.getSource() instanceof JScrollPane) {
+            System.out.println("focus lost");
             tabFocused = false;
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        JComponent component = (JComponent) e.getSource();
+        component.requestFocus();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

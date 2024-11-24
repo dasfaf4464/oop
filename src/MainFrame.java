@@ -22,13 +22,11 @@ public class MainFrame extends JFrame {
         container.setLayout(new GridLayout(2,1));
 
         editor = new JTabbedPane();
-        editor.setFocusable(true);
-        editor.addFocusListener(eventHandler);
-        editor.addKeyListener(eventHandler);
 
         results = new JTextArea();
         results.setEditable(false);
         results.setFocusable(true);
+        results.addMouseListener(eventHandler);
 
         container.add(editor);
         container.add(new JScrollPane(results));
@@ -38,6 +36,16 @@ public class MainFrame extends JFrame {
 
     public void addTab(String title, String content) {
         JScrollPane pane = new JScrollPane(new JTextArea(content));
+        pane.addMouseListener(eventHandler);
+        pane.addFocusListener(eventHandler);
+        pane.addKeyListener(eventHandler);
+        pane.setFocusable(true);
+        JViewport viewport = pane.getViewport();
+        JTextArea textArea = (JTextArea) viewport.getView();
+        textArea.addMouseListener(eventHandler);
+        textArea.addFocusListener(eventHandler);
+        textArea.addKeyListener(eventHandler);
+        textArea.setFocusable(true);
         editor.add(title, pane);
     }
 
