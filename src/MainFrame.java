@@ -24,8 +24,11 @@ public class MainFrame extends JFrame {
         editor = new JTabbedPane();
         editor.setFocusable(true);
         editor.addFocusListener(eventHandler);
+        editor.addKeyListener(eventHandler);
 
         results = new JTextArea();
+        results.setEditable(false);
+        results.setFocusable(true);
 
         container.add(editor);
         container.add(new JScrollPane(results));

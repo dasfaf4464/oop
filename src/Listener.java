@@ -120,9 +120,7 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
     @Override
     public void keyPressed(KeyEvent e) {
         pressedKeys.add(e.getKeyCode());
-
-        if(tabFocused && pressedKeys.contains(KeyEvent.VK_CONTROL) && pressedKeys.contains(KeyEvent.VK_S)) {
-            System.out.println("com");
+        if(tabFocused && pressedKeys.contains(KeyEvent.VK_CONTROL) && pressedKeys.contains(KeyEvent.VK_R)) {
             compileItemClicked();
         }
     }
@@ -135,6 +133,7 @@ public class Listener extends KeyAdapter implements ActionListener, FocusListene
     @Override public void focusGained(FocusEvent e) {
         JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
         if(tabbedPane.equals(frame.editor)) {
+            System.out.println("focused");
             tabFocused = true;
         }
     }
